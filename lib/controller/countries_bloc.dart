@@ -87,6 +87,6 @@ class CountriesBloc{
         fontSize: 16,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.brown.shade300
-    );;
+    );
   }
 }
