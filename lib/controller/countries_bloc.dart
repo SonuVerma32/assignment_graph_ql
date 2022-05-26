@@ -6,11 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class CountriesBloc{
+  // object of apiManager class for api call
   final ApiManager _apiManager = ApiManager();
+
   final _countriesController = StreamController<List<Countries>>();
   final _countriesByCodeController = StreamController<List<Countries>>();
+
+  // searchList is temporary storage list for searching operations
   List<Countries>? searchList = [];
+
+  // countriesData list holds the data during the whole process of searching
   List<Countries>? countriesData  = [];
+
   Stream<List<Countries>>? get countriesStream =>
       _countriesController.stream;
 
@@ -23,7 +30,7 @@ class CountriesBloc{
   StreamSink<List<Countries>> get countriesByCodeSink =>
       _countriesByCodeController.sink;
 
-
+// Get List of Countries
   getCountries()async{
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
       showToast(error.toString());
@@ -31,25 +38,32 @@ class CountriesBloc{
     });
     var decode = jsonDecode(apiData);
     countriesData = CountriesModel.fromJson(decode).countries;
+    countriesData!.sort((a, b) => a.name!.compareTo(b.name!));
     countriesSink.add(countriesData!);
   }
 
+// search in the countriesData list for search operation according to country name
   searchByCountry(String keyword){
     searchList!.clear();
     for (var v in countriesData!) {
       for (var l in v.languages!) {
-        if (l.name!.toLowerCase().contains(keyword.toLowerCase())) {
+        if (l.name!.toUpperCase().contains(keyword.toUpperCase())) {
           searchList!.add(v);
         }
       }
     }
-    if(keyword == '') {
-      countriesSink.add(countriesData!);
-    }else{
-      countriesSink.add(searchList!);
+    if(searchList!.isNotEmpty){
+      if(keyword == '') {
+        countriesSink.add(countriesData!);
+      }else{
+        countriesSink.add(searchList!);
+      }
+    } else{
+      showToast('Code $keyword not found, try different code.');
     }
   }
 
+  // search in the countriesData list for search operation according to country code
   searchByCode(String keyword)async{
     searchList!.clear();
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
@@ -58,8 +72,9 @@ class CountriesBloc{
     });
     var decode = jsonDecode(apiData);
     countriesData = CountriesModel.fromJson(decode).countries;
+    countriesData!.sort((a, b) => a.name!.compareTo(b.name!));
     for (var v in countriesData!) {
-        if (v.code!.toLowerCase().contains(keyword.toLowerCase())) {
+        if (v.code!.toUpperCase().contains(keyword.toUpperCase())) {
           searchList!.add(v);
         }
     }
@@ -81,6 +96,8 @@ class CountriesBloc{
     _countriesController.close();
     _countriesByCodeController.close();
   }
+
+
   showToast(String msg){
     return Fluttertoast.showToast(
         msg: msg,

@@ -25,17 +25,25 @@ class _CountriesHomeState extends State<CountriesHome> {
         appBar: AppBar(
           title: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              onChanged: (v){
-                _countriesBloc.searchByCountry(v);
-              },
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                hintText: 'Search by language',
-                enabled: true,
-                border: UnderlineInputBorder(
+            child: Container(
+              height: 45,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  color: Colors.white,
                 ),
-                suffixIcon: Icon(Icons.search,color: Colors.white),
+              padding: const EdgeInsets.all(4.0),
+              child: TextFormField(
+                onChanged: (v){
+                  _countriesBloc.searchByCountry(v.trim());
+                },
+                keyboardType: TextInputType.text,
+                decoration: const InputDecoration(
+                  hintText: 'Search by language',
+                  enabled: true,
+                  border: UnderlineInputBorder(
+                  ),
+                  suffixIcon: Icon(Icons.search,color: Colors.white),
+                ),
               ),
             ),
           ),
@@ -75,33 +83,43 @@ class _CountriesHomeState extends State<CountriesHome> {
                       ? languages = languages = snapshot.data![index].languages![0].name!
                       : languages = '';
                 }
-                return ExpansionTile(
-                  title: Text(snapshot.data![index].name.toString()),
-                  leading: Text(snapshot.data![index].emoji.toString()),
-                  subtitle: Text(snapshot.data![index].continent!.name.toString()),
-                  // trailing: Text(snapshot.data![index].code.toString()),
-                  children: [
-                    Row(
-                      children: [
-                        const Text('Currency: ',style: TextStyle(fontWeight: FontWeight.bold,),),
-                        Text(snapshot.data![index].currency.toString(),style: const TextStyle(fontWeight: FontWeight.bold,),)
-                      ],
-                    ),
-                    const Divider(),
-                    Row(
-                      children: [
-                        const Text('Native: ',style: TextStyle(fontWeight: FontWeight.bold,),),
-                        Text(snapshot.data![index].native.toString(),style: const TextStyle(fontWeight: FontWeight.bold,),)
-                      ],
-                    ),
-                    const Divider(),
-                    Row(
-                      children: [
-                        const Text('Languages: ',style: TextStyle(fontWeight: FontWeight.bold,),),
-                        Text(languages,style: const TextStyle(fontWeight: FontWeight.bold,),)
-                      ],
-                    )
-                  ],
+                return Card(
+                  child: ExpansionTile(
+                    title: Text(snapshot.data![index].name.toString()),
+                    leading: Text(snapshot.data![index].emoji.toString()),
+                    subtitle: Text(snapshot.data![index].continent!.name.toString()),
+                    // trailing: Text(snapshot.data![index].code.toString()),
+                    children: [
+                      Row(
+                        children: [
+                          const Text('Currency: ',style: TextStyle(fontWeight: FontWeight.bold,),),
+                          Text(snapshot.data![index].currency.toString(),style: const TextStyle(fontWeight: FontWeight.bold,),)
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text('Code: ',style: TextStyle(fontWeight: FontWeight.bold,),),
+                          Text(snapshot.data![index].code.toString(),style: const TextStyle(fontWeight: FontWeight.bold,),)
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text('Native: ',style: TextStyle(fontWeight: FontWeight.bold,),),
+                          Text(snapshot.data![index].native.toString(),style: const TextStyle(fontWeight: FontWeight.bold,),)
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        children: [
+                          const Text('Languages: ',style: TextStyle(fontWeight: FontWeight.bold,),),
+                          Text(languages,style: const TextStyle(fontWeight: FontWeight.bold,),)
+                        ],
+                      ),
+                      const Divider(),
+                    ],
+                  ),
                 );
               },
             )
