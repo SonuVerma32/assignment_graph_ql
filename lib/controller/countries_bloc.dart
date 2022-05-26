@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:assignment_graph_ql/model/countries_model.dart';
 import 'package:assignment_graph_ql/network/api_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class CountriesBloc{
   // object of apiManager class for api call
   final ApiManager _apiManager = ApiManager();
-
+  late BuildContext context;
   final _countriesController = StreamController<List<Countries>>();
   final _countriesByCodeController = StreamController<List<Countries>>();
 
@@ -31,9 +30,10 @@ class CountriesBloc{
       _countriesByCodeController.sink;
 
 // Get List of Countries
-  getCountries(BuildContext context)async{
+  getCountries(BuildContext ctx)async{
+    context = ctx;
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
-      showSnackBar(context, error.toString());
+      showSnackBar(error.toString());
       getCountries(context);
     });
     var decode = jsonDecode(apiData);
@@ -43,7 +43,8 @@ class CountriesBloc{
   }
 
 // search in the countriesData list for search operation according to country name
-  searchByCountry(BuildContext context, String keyword){
+  searchByCountry(BuildContext ctx, String keyword){
+    context = ctx;
     searchList!.clear();
     for (var v in countriesData!) {
       for (var l in v.languages!) {
@@ -59,15 +60,16 @@ class CountriesBloc{
         countriesSink.add(searchList!);
       }
     } else{
-      showSnackBar(context, 'Country $keyword not found, try different code.');
+      showSnackBar('Country $keyword not found, try different language.');
     }
   }
 
   // search in the countriesData list for search operation according to country code
-  searchByCode(BuildContext context,String keyword)async{
+  searchByCode(BuildContext ctx,String keyword)async{
+    context = ctx;
     searchList!.clear();
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
-      showSnackBar(context, error.toString());
+      showSnackBar(error.toString());
       searchByCode(context, keyword);
     });
     var decode = jsonDecode(apiData);
@@ -86,7 +88,7 @@ class CountriesBloc{
       }
     }
     else{
-      showSnackBar(context, 'Code $keyword not found, try different code.');
+      showSnackBar('Code $keyword not found, try different code.');
     }
 
 
@@ -98,7 +100,7 @@ class CountriesBloc{
   }
 
 
-  showSnackBar(BuildContext context, String msg){
+  showSnackBar(String msg){
     var snackBar = SnackBar(
       content: Text(msg),
       backgroundColor: Colors.black,
