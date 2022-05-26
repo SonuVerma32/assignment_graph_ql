@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.assignment_graph_ql">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="assignment_graph_ql"
         android:name="${applicationName}"
