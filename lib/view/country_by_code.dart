@@ -29,7 +29,10 @@ class _CountryByCodeState extends State<CountryByCode> {
               onChanged: (v){
                 _countriesBloc.searchByCode(v);
               },
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(
+                hintText: 'Search by Code',
+                enabled: true,
                 border: UnderlineInputBorder(
                 ),
                 suffixIcon: Icon(Icons.search,color: Colors.white),

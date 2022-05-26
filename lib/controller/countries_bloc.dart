@@ -26,6 +26,8 @@ class CountriesBloc{
 
   getCountries()async{
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
+      showToast(error.toString());
+      getCountries();
     });
     var decode = jsonDecode(apiData);
     countriesData = CountriesModel.fromJson(decode).countries;
@@ -51,6 +53,8 @@ class CountriesBloc{
   searchByCode(String keyword)async{
     searchList!.clear();
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
+      showToast(error.toString());
+      searchByCode(keyword);
     });
     var decode = jsonDecode(apiData);
     countriesData = CountriesModel.fromJson(decode).countries;
@@ -67,12 +71,7 @@ class CountriesBloc{
       }
     }
     else{
-      Fluttertoast.showToast(
-        msg: 'No related code found, try different country code.',
-        fontSize: 16,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.brown.shade300
-      );
+      showToast('No related code found, try different country code.');
     }
 
 
@@ -81,5 +80,13 @@ class CountriesBloc{
   void dispose(){
     _countriesController.close();
     _countriesByCodeController.close();
+  }
+  showToast(String msg){
+    return Fluttertoast.showToast(
+        msg: msg,
+        fontSize: 16,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.brown.shade300
+    );;
   }
 }
