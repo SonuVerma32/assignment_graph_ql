@@ -85,8 +85,11 @@ class _CountriesHomeState extends State<CountriesHome> {
                 }
                 return Card(
                   child: ExpansionTile(
-                    title: Text(snapshot.data![index].name.toString()),
-                    leading: Text(snapshot.data![index].emoji.toString()),
+                    title: Text(snapshot.data![index].name.toString(),style: const TextStyle(fontWeight: FontWeight.bold,),),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.orangeAccent.shade100,
+                      child: Text(snapshot.data![index].emoji.toString()),
+                    ),
                     subtitle: Text(snapshot.data![index].continent!.name.toString()),
                     // trailing: Text(snapshot.data![index].code.toString()),
                     children: [
