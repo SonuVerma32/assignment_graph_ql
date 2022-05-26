@@ -16,7 +16,7 @@ class _CountryByCodeState extends State<CountryByCode> {
   @override
   void initState(){
     super.initState();
-    _countriesBloc.searchByCode('');
+    _countriesBloc.searchByCode(context, '');
   }
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _CountryByCodeState extends State<CountryByCode> {
               padding: const EdgeInsets.all(4.0),
               child: TextFormField(
                 onChanged: (v){
-                  _countriesBloc.searchByCode(v.trim());
+                  _countriesBloc.searchByCode(context, v.trim());
                 },
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(

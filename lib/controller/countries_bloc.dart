@@ -31,10 +31,10 @@ class CountriesBloc{
       _countriesByCodeController.sink;
 
 // Get List of Countries
-  getCountries()async{
+  getCountries(BuildContext context)async{
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
-      showToast(error.toString());
-      getCountries();
+      showSnackBar(context, error.toString());
+      getCountries(context);
     });
     var decode = jsonDecode(apiData);
     countriesData = CountriesModel.fromJson(decode).countries;
@@ -43,7 +43,7 @@ class CountriesBloc{
   }
 
 // search in the countriesData list for search operation according to country name
-  searchByCountry(String keyword){
+  searchByCountry(BuildContext context, String keyword){
     searchList!.clear();
     for (var v in countriesData!) {
       for (var l in v.languages!) {
@@ -59,16 +59,16 @@ class CountriesBloc{
         countriesSink.add(searchList!);
       }
     } else{
-      showToast('Code $keyword not found, try different code.');
+      showSnackBar(context, 'Country $keyword not found, try different code.');
     }
   }
 
   // search in the countriesData list for search operation according to country code
-  searchByCode(String keyword)async{
+  searchByCode(BuildContext context,String keyword)async{
     searchList!.clear();
     var apiData = await _apiManager.getCountries().onError((error, stackTrace){
-      showToast(error.toString());
-      searchByCode(keyword);
+      showSnackBar(context, error.toString());
+      searchByCode(context, keyword);
     });
     var decode = jsonDecode(apiData);
     countriesData = CountriesModel.fromJson(decode).countries;
@@ -86,7 +86,7 @@ class CountriesBloc{
       }
     }
     else{
-      showToast('Code $keyword not found, try different code.');
+      showSnackBar(context, 'Code $keyword not found, try different code.');
     }
 
 
@@ -98,12 +98,13 @@ class CountriesBloc{
   }
 
 
-  showToast(String msg){
-    return Fluttertoast.showToast(
-        msg: msg,
-        fontSize: 16,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.brown.shade300
+  showSnackBar(BuildContext context, String msg){
+    var snackBar = SnackBar(
+      content: Text(msg),
+      backgroundColor: Colors.black,
+      duration: const Duration(seconds: 2),
+      action: SnackBarAction(label: 'Okay', onPressed: (){}),
     );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

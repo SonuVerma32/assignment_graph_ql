@@ -16,7 +16,7 @@ class _CountriesHomeState extends State<CountriesHome> {
   @override
   void initState(){
     super.initState();
-    _countriesBloc.getCountries();
+    _countriesBloc.getCountries(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _CountriesHomeState extends State<CountriesHome> {
               padding: const EdgeInsets.all(4.0),
               child: TextFormField(
                 onChanged: (v){
-                  _countriesBloc.searchByCountry(v.trim());
+                  _countriesBloc.searchByCountry(context, v.trim());
                 },
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
@@ -53,7 +53,7 @@ class _CountriesHomeState extends State<CountriesHome> {
             IconButton(
               icon: const Icon(Icons.refresh,color: Colors.white),
               onPressed: (){
-                _countriesBloc.getCountries();
+                _countriesBloc.getCountries(context);
               },
             )
           ],
